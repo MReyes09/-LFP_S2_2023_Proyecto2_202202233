@@ -3,6 +3,7 @@ from tkinter import filedialog
 from tkinter import ttk
 from tkinter import messagebox
 import json
+from controller.analyst import Analyst
 
 class Ventana_Principal(tk.Tk):
     def __init__(self):
@@ -21,10 +22,12 @@ class Ventana_Principal(tk.Tk):
         self.txtArea = tk.Text(self.txtContainer, width=105, height=50, bg="#BEFACB")
         self.txtConsola = tk.Text(self.txtContainer, width=100, height=100, bg="#F2DCC1", state="disabled")
         self.file_Path = None
+        self.analyst = None
 
         self.build_Componentes()
 
         self.btnAbrir.bind("<Button-1>", self.open_File)
+        self.btnAnalizar.bind("<Button-1>", self.analyst_Data)
 
     def build_Componentes(self):
 
@@ -55,3 +58,21 @@ class Ventana_Principal(tk.Tk):
         except Exception as e:
 
             print(f"Error: {e}")
+
+    def analyst_Data(self, event):
+
+        if self.file_Path:
+
+            try:
+
+                text = self.txtArea.get(1.0, tk.END)
+                self.analyst = Analyst(text)
+                self.analyst.analyst_Data()
+
+            except Exception as e:
+
+                print(f"Error: {e}")
+
+        else:
+
+            messagebox.showwarning("Cuidado", "Aun no has abierto ningun archivo bizdata")
