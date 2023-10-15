@@ -1,7 +1,7 @@
 class Error():
-    def __init__(self, lexema, tipo, columna, fila) -> None:
+    def __init__(self, lexema, columna, fila) -> None:
         self.lexema = lexema
-        self.tipo = tipo
+        self.tipo = "Lexico"
         self.columna = columna
         self.fila = fila
 

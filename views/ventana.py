@@ -69,6 +69,15 @@ class Ventana_Principal(tk.Tk):
                 self.analyst = Analyst(text)
                 self.analyst.analyst_Data()
 
+                if not len(self.analyst.errores_Lex_List) == 0:
+
+                    messagebox.showwarning("Errores detectados", "Se han detectado errores en el archivo, puedes consultar \n"
+                         "el reporte de errores para mayor información.")
+
+                else:
+
+                    messagebox.showinfo("Análisis completado", "El archivo se ha analisado correctamente")
+
             except Exception as e:
 
                 print(f"Error: {e}")
