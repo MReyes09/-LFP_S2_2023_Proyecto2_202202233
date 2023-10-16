@@ -84,28 +84,22 @@ class Analyst():
                 puntero = 0
 
             elif ascii == 39:
+
                 self.f = f
                 self.c = c
                 self.tokens = tokens
-                # self.errores_Lex_List =
-                lexema, cadena = self.find_Multi_Comment(cadena)
-
-                if lexema and cadena:
-                    lex = Token("Multiline_Comment", lexema, f, c)
-                    c += self.c
-                    f = self.f
-                    tokens.append(lex)
-                    puntero = 0
+                cadena = self.find_Multi_Comment(cadena)
+                c = self.c
+                f = self.f
 
             elif caracter.isdigit() or ascii in (45, 43):
 
-                token, cadena, numero = self.find_Number(cadena)
-
-                if token and cadena:
-                    num = Token("Numero", token, f, c)
-                    tokens.append(num)
-                    c += len(numero)
-                    puntero = 0
+                self.f = f
+                self.c = c
+                self.tokens = tokens
+                cadena = self.find_Number(cadena)
+                puntero = 0
+                c = self.c
 
             elif ascii == 35:
 
@@ -216,35 +210,85 @@ class Analyst():
 
         return None, None
 
-    def find_Number(self, texto):
+    def find_Number(self, txt):
 
-        numero = ''
-        clave = ''
-        verificar = False
+        lexema = ''
+        state = 0
 
-        for caracter in texto:
+        for char in txt:
 
-            clave += caracter
-            ascii = ord(caracter)
+            ascii = ord(char)
 
-            if ascii == 46:
-                verificar = True
+            if state == 0:
 
-            if ascii in (46, 45) or caracter.isdigit():
+                if ascii in (43, 45):
 
-                numero += caracter
+                    lexema += char
+                    state = 3
 
-            else:
+                elif char.isdigit():
 
-                if verificar:
+                    lexema += char
+                    state = 4
 
-                    return float(numero), texto[len(clave) - 1:], numero
+            elif state == 3:
+
+                if char.isdigit():
+
+                    lexema += char
+                    state = 4
 
                 else:
 
-                    return int(numero), texto[len(clave) - 1:], numero
+                    self.c += len(lexema)
+                    error = Error(lexema, self.c, self.f)
+                    self.errores_Lex_List.append(error)
 
-        return None, None, None
+                    return txt[len(lexema):]
+
+            elif state == 4:
+
+                if char.isdigit():
+
+                    lexema += char
+
+                elif ascii == 46:
+
+                    lexema += char
+                    state = 8
+
+                else:
+
+                    self.c += len(lexema)
+                    self.tokens.append(Token("int", int(lexema), self.f, self.c))
+                    return txt[len(lexema):]
+
+            elif state == 8:
+
+                if char.isdigit():
+
+                    lexema += char
+                    state = 10
+
+                else:
+
+                    self.c += len(lexema)
+                    error = Error(lexema, self.c, self.f)
+                    self.errores_Lex_List.append(error)
+
+                    return txt[len(lexema):]
+
+            elif state == 10:
+
+                if char.isdigit():
+
+                    lexema += char
+
+                else:
+
+                    self.c += len(lexema)
+                    self.tokens.append(Token("float", float(lexema), self.f, self.c))
+                    return txt[len(lexema):]
 
     def find_comment(self, cadena):
 
@@ -268,7 +312,7 @@ class Analyst():
 
         lexema = ''
         estado = 0
-        puntero = 0
+        inicio = [self.c, self.f]
 
         for char in cadena:
 
@@ -292,7 +336,9 @@ class Analyst():
 
                 else:
 
-                    print("Error lexico, se esperaba una comilla")
+                    error = Error(lexema, self.c, self.f)
+                    self.errores_Lex_List.append(error)
+                    return cadena[len(lexema):]
 
             elif estado == 9:
 
@@ -304,7 +350,9 @@ class Analyst():
 
                 else:
 
-                    print("Error lexico, se esperaba una comilla")
+                    error = Error(lexema, self.c, self.f)
+                    self.errores_Lex_List.append(error)
+                    return cadena[len(lexema):]
 
             elif estado == 11:
 
@@ -314,22 +362,17 @@ class Analyst():
 
                         self.f += 1
                         self.c = 1
+
                     else:
 
                         self.c += 1
+
                     lexema += char
                     estado = 11
 
                 else:
 
-                    if ascii == 10:
-
-                        self.f += 1
-                        self.c = 0
-                    else:
-
-                        self.c += 1
-
+                    self.c += 1
                     lexema += char
                     estado = 12
 
@@ -343,7 +386,9 @@ class Analyst():
 
                 else:
 
-                    print("Error lexico, se esperaba una comilla")
+                    error = Error(lexema, self.c, self.f)
+                    self.errores_Lex_List.append(error)
+                    return cadena[len(lexema):]
 
             elif estado == 13:
 
@@ -351,11 +396,11 @@ class Analyst():
 
                     lexema += char
                     self.c += 1
-
-                    return lexema, cadena[len(lexema):]
+                    self.tokens.append(Token("Multi_Comment", lexema, inicio[1], inicio[0]))
+                    return cadena[len(lexema):]
 
                 else:
 
-                    print("Error lexico, se esperaba una comilla")
-
-        return None, None
+                    error = Error(lexema, self.c, self.f)
+                    self.errores_Lex_List.append(error)
+                    return cadena[len(lexema):]

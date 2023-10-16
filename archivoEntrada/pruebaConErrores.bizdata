@@ -1,5 +1,5 @@
 Claves = [
-    "codigo, "producto", "precio_compra",
+    "codigo", "producto", "precio_compra",
     "precio_venta", "stock"
 ]
 
