@@ -120,3 +120,93 @@ La clase `Sintactico` se encarga del análisis sintáctico de tokens para la pla
 ### Consideraciones Finales
 
 La clase `Sintactico` es esencial para el análisis de la estructura de datos definida en un formato ".bizdata". Sus métodos verifican la sintaxis del código según las reglas establecidas y generan una lista de errores sintácticos cuando se identifican problemas, proporcionando información valiosa para la corrección y depuración del código.
+
+
+## ANALISIS LEXICO
+![WhatsApp Image 2023-10-28 at 16 33 24](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/a7879d4d-0610-4738-9bbd-14d6457d04a9)
+![WhatsApp Image 2023-10-28 at 16 33 47](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/9fa6b68d-6e86-4953-abb2-509fa5e3432e)
+![WhatsApp Image 2023-10-28 at 16 33 49](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/ccdd0cac-737a-483a-aaf2-77f9994920ce)
+![WhatsApp Image 2023-10-02 at 14 39 39](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/a7ea5708-d2fc-4760-ad77-814b2520286d)
+
+
+## ANALISIS SINTACTICO
+
+Gramática:
+
+    Claves = [
+        "codigo", "producto", "precio_compra",
+        "precio_venta", "stock"
+    ]
+
+    Registros = [
+        {1, "Barbacoa", 10.50, 20.00, 6}
+        {2, "Salsa", 13.00, 16.00, 7}
+        {3, "Mayonesa", 15.00, 18.00, 8}
+        {4, "Mostaza", 14.00, 16.00, 4}
+    ]
+
+    imprimir("Reporte de");
+    imprimirln("Reporte de");
+    conteo();
+    promedio("stock");
+    contarsi("stock", 0);
+    sumar("stock");
+    max("precio_venta");
+    min("precio_compra");
+
+    exportarReporte("Reporte HTMl de abarroteria");
+
+-----------------------------------------------------------------------
+<Claves> viene siendo Claves
+<Registros> viene siendo Registros
+<Funciones> viene siendo imprimir, imprimirln, conteo, promedio, contarsi....
+
+Terminales:
+    Claves, Registros, word_Key, igual, Corchete_A,String, coma,
+    Corchete_C, LLave_A, int, float, LLave_C, Paretesis_A,
+    Parentesis_C, Punto_coma
+
+No Terminales:
+
+    <Inicio>, <Claves> <Registros>, <Funciones>, <otra_Clave>, <Registro>,
+    <otro_Registro>, <Valor>, <otro_Valor>, <Funcion>, <otra_Funcion>,
+    <Parametros>, <otra_Parametro>
+
+Inicio: <Inicio>
+
+Producciones:
+
+    <Inicio> ::= <Claves> <Registros> <Funciones>
+    ----------------------------------------------------------------------------
+    <Claves> ::= Claves igual Corchete_A String <otra_Clave> Corchete_C
+    <otra_Clave> ::= coma String <otra_Clave>
+                    | ε
+    ---------------------------------------------------------------------
+
+    <Registros> ::= Registros igual Corchete_A <Registro> <otro_Registro> Corchete_C
+    <Registro> ::= Llave_A <Valor> <otro_Valor> Llave_C
+    <Valor> ::= String
+            | int
+            | float
+    <otro_Valor> ::= coma <Valor> <otro_Valor>
+            | ε
+    <otro_Registro> ::= <Registro><otro_Registro>
+                        | ε
+    --------------------------------------------------------------------------------
+
+    <Funciones> ::= <Funcion> <otra_Funcion>
+    <otra_Funcion> ::= <Funcion> <otra_Funcion>
+                    | ε
+    <Funcion> ::= word_key Parentesis_A <Parametros> Parentesis_C Punto_coma
+    <Parametros> ::= <Valor> <otro_Parametro>
+                    | ε
+    <Valor> ::= String
+            | int
+            | float
+    <otro_Parametro> ::= coma <Valor> <otro_Parametro>
+                        | ε
+
+
+
+
+
