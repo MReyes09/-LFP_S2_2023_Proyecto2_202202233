@@ -57,7 +57,8 @@ La funcionalidad del botón "Reporte" aún no ha sido definida en la aplicación
 ## REFERENCIA DE LA INTERFAZ
 ![WhatsApp Image 2023-10-28 at 15 24 28](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/d8b5aa1b-9ae7-466e-aa51-9250421bec19)
 
-![WhatsApp Image 2023-10-28 at 15 25 13](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/50b3a326-76df-4eba-b7c0-5dd52e691e8a)
+![WhatsApp Image 2023-10-28 at 15 33 40](https://github.com/MReyes09/-LFP_S2_2023_Proyecto2_202202233/assets/69548347/6ca0a5d6-447b-4eda-9479-615a78372f25)
+
 
 ## Conclusiones
 
