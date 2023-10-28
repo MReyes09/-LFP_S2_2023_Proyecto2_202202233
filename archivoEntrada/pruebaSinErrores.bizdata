@@ -26,6 +26,7 @@ promedio("stock");
 contarsi("stock", 0);
 contarsi("stock", 1);
 contarsi("stock", 2);
+datos();
 sumar("stock");
 max("precio_venta");
 min("precio_compra");

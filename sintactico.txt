@@ -1,0 +1,74 @@
+Gramática:
+
+    Claves = [
+        "codigo", "producto", "precio_compra",
+        "precio_venta", "stock"
+    ]
+
+    Registros = [
+        {1, "Barbacoa", 10.50, 20.00, 6}
+        {2, "Salsa", 13.00, 16.00, 7}
+        {3, "Mayonesa", 15.00, 18.00, 8}
+        {4, "Mostaza", 14.00, 16.00, 4}
+    ]
+
+    imprimir("Reporte de");
+    imprimirln("Reporte de");
+    conteo();
+    promedio("stock");
+    contarsi("stock", 0);
+    sumar("stock");
+    max("precio_venta");
+    min("precio_compra");
+
+    exportarReporte("Reporte HTMl de abarroteria");
+
+-----------------------------------------------------------------------
+<Claves> viene siendo Claves
+<Registros> viene siendo Registros
+<Funciones> viene siendo imprimir, imprimirln, conteo, promedio, contarsi....
+
+Terminales:
+    Claves, Registros, word_Key, igual, Corchete_A,String, coma,
+    Corchete_C, LLave_A, int, float, LLave_C, Paretesis_A,
+    Parentesis_C, Punto_coma
+
+No Terminales:
+
+    <Inicio>, <Claves> <Registros>, <Funciones>, <otra_Clave>, <Registro>,
+    <otro_Registro>, <Valor>, <otro_Valor>, <Funcion>, <otra_Funcion>,
+    <Parametros>, <otra_Parametro>
+
+Inicio: <Inicio>
+
+Producciones:
+
+    <Inicio> ::= <Claves> <Registros> <Funciones>
+    ----------------------------------------------------------------------------
+    <Claves> ::= Claves igual Corchete_A String <otra_Clave> Corchete_C
+    <otra_Clave> ::= coma String <otra_Clave>
+                    | ε
+    ---------------------------------------------------------------------
+
+    <Registros> ::= Registros igual Corchete_A <Registro> <otro_Registro> Corchete_C
+    <Registro> ::= Llave_A <Valor> <otro_Valor> Llave_C
+    <Valor> ::= String
+            | int
+            | float
+    <otro_Valor> ::= coma <Valor> <otro_Valor>
+            | ε
+    <otro_Registro> ::= <Registro><otro_Registro>
+                        | ε
+    --------------------------------------------------------------------------------
+
+    <Funciones> ::= <Funcion> <otra_Funcion>
+    <otra_Funcion> ::= <Funcion> <otra_Funcion>
+                    | ε
+    <Funcion> ::= word_key Parentesis_A <Parametros> Parentesis_C Punto_coma
+    <Parametros> ::= <Valor> <otro_Parametro>
+                    | ε
+    <Valor> ::= String
+            | int
+            | float
+    <otro_Parametro> ::= coma <Valor> <otro_Parametro>
+                        | ε

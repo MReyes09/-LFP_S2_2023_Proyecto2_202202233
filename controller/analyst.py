@@ -11,7 +11,6 @@ class Analyst():
         self.c = 1
         self.tokens = []
         self.errores_Lex_List = []
-        self.errores_Sem_List = []
 
     def analyst_Data(self):
 
@@ -30,11 +29,11 @@ class Analyst():
             if (ascii >= 65 and ascii <= 90) or (ascii >= 97 and ascii <= 122):
 
                 copy = cadena
-                token, cadena = self.word_key(cadena)
+                token, cadena, word = self.word_key(cadena)
 
-                if token and cadena:
+                if token and cadena and word:
 
-                    lex = Token("word_Key", token, f, c)
+                    lex = Token(word, token, f, c)
                     c += len(token)
                     tokens.append(lex)
                     puntero = 0
@@ -57,7 +56,17 @@ class Analyst():
 
             elif ascii in (91, 93):
 
-                char = Token("Corchete", caracter, f, c)
+                tipo_cor = ''
+
+                if ascii == 91:
+
+                     tipo_cor = "Corchete_A"
+
+                else:
+
+                    tipo_cor = "Corchete_C"
+
+                char = Token(tipo_cor, caracter, f, c)
                 tokens.append(char)
                 c += 1
                 cadena = cadena[1:]
@@ -91,6 +100,7 @@ class Analyst():
                 cadena = self.find_Multi_Comment(cadena)
                 c = self.c
                 f = self.f
+                puntero = 0
 
             elif caracter.isdigit() or ascii in (45, 43):
 
@@ -107,15 +117,23 @@ class Analyst():
 
                 if lexema and cadena:
 
-                    lex = Token("Line_Comment", lexema, f, c)
                     c += 1
                     c += len(lexema)
-                    tokens.append(lex)
                     puntero = 0
 
             elif ascii in (123, 125):
 
-                char = Token("Llave", caracter, f, c)
+                tipo_L = ""
+
+                if ascii == 123:
+
+                    tipo_L = "LLave_A"
+
+                else:
+
+                    tipo_L = "Llave_C"
+
+                char = Token(tipo_L, caracter, f, c)
                 tokens.append(char)
                 c += 1
                 cadena = cadena[1:]
@@ -123,7 +141,17 @@ class Analyst():
 
             elif ascii in (40, 41):
 
-                char = Token("Parentesis", caracter, f, c)
+                tipo_P = ""
+
+                if ascii == 40:
+
+                    tipo_P = "Parentesis_A"
+
+                else:
+
+                    tipo_P = "Parentesis_C"
+
+                char = Token(tipo_P, caracter, f, c)
                 tokens.append(char)
                 c += 1
                 cadena = cadena[1:]
@@ -131,7 +159,7 @@ class Analyst():
 
             elif ascii == 59:
 
-                char = Token("Punto y coma", caracter, f, c)
+                char = Token("Punto_coma", caracter, f, c)
                 tokens.append(char)
                 c += 1
                 cadena = cadena[1:]
@@ -158,9 +186,9 @@ class Analyst():
                 puntero = 0
                 c += 1
 
-        for error in self.errores_Lex_List:
-
-            print(f"lexema = {error.lexema} f = {error.fila} c = {error.columna}")
+        # for token in self.tokens:
+        #
+        #     print(f"nombre = {token.nombre} token = {token.lexema}")
 
     def word_key(self, cadena):
 
@@ -172,23 +200,29 @@ class Analyst():
 
             if not ((ascii >= 65 and ascii <= 90) or (ascii >= 97 and ascii <= 122)):
 
-                word_Reserved = ["Claves", "Registros", "imprimir", "imprimirln",
-                     "conteo", "promedio", "contarsi", "sumar",
-                     "max", "min", "exportarReporte"]
+                word_Reserved = ["Claves", "Registros"]
 
                 for word in word_Reserved:
 
                     if lexema == word:
 
-                        return lexema, cadena[len(lexema):]
+                        return lexema, cadena[len(lexema):], word
 
-                return lexema, None
+                function_Reserved = ["imprimir", "imprimirln",
+                     "conteo", "promedio", "contarsi", "datos", "sumar",
+                     "max", "min", "exportarReporte"]
+
+                for function in function_Reserved:
+
+                    if lexema == function:
+
+                        return lexema, cadena[len(lexema):], "word_key"
+
+                return lexema, None, None
 
             else:
 
                 lexema += caracter
-
-        return None, None
 
     def find_Str(self, texto):
 
@@ -312,7 +346,6 @@ class Analyst():
 
         lexema = ''
         estado = 0
-        inicio = [self.c, self.f]
 
         for char in cadena:
 
@@ -396,7 +429,7 @@ class Analyst():
 
                     lexema += char
                     self.c += 1
-                    self.tokens.append(Token("Multi_Comment", lexema, inicio[1], inicio[0]))
+                    # self.tokens.append(Token("Multi_Comment", lexema, inicio[1], inicio[0]))
                     return cadena[len(lexema):]
 
                 else:
